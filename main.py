@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, url_for, redirect
+from flask import Flask, request, render_template, url_for, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_required, login_user, current_user, logout_user
 
@@ -24,18 +24,24 @@ def userLoader(userID):
 
 @app.route('/')
 def index():
-    return render_template('index.html', title="Test", content="Test", link="login")
+    return render_template('index.html')
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    user = User.query.filter_by(username="Admin").first()
-    login_user(user)
-    return render_template('index.html', title="Login", content="Logged In", link="home")
+    if request.method == 'GET':
+        user = User.query.filter_by(username="Admin").first()
+        login_user(user)
+        return render_template('login.html')
+    
+    elif request.method == 'POST':
+        data = request.get_json()
+        print(data)
 
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
+    flash("Logged Out")
     return redirect('/')
 
 @app.route('/home')
