@@ -1,16 +1,28 @@
-const submitBtn = document.getElementById('submitBtn');
+console.log("Submit Script Loaded");
 
-const username = document.getElementById('uname');
-const password = document.getElementById('pword');
+function submit(path) {
+    const username = document.getElementById('uname');
+    const password = document.getElementById('pword');
 
-submitBtn.onclick = () => {
+    console.log("Submit Clicked");
+
     dataToPass = {
-        "username" : username.value,
-        "password" : password.value
+        "username": username.value,
+        "password": password.value,
     }
 
-    fetch('/login', {
+    fetch(path, {
+        headers: {
+            'Content-type': 'application/json'
+        },
         method: 'POST',
         body: JSON.stringify(dataToPass)
+    }).then((res) => {return res.text()}
+    ).then((text) => {
+        console.log("Response: ");
+        console.log(text);
     })
-}
+
+    username.value = '';
+    password.value = '';
+};

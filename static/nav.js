@@ -1,32 +1,12 @@
-export default class Nav extends HTMLElement {
-    constructor() {
-        super();
-    }
+console.log("Nav Script Loaded");
 
-    render() {
-        return(
-            <div class="nav">
-                <ul class="navbar">
-                    <li><a href="/login">Login</a></li>
-                    <li><a href="/logout">Logout</a></li>
-                    <li><a href="/home">Home</a></li>
-                </ul>
-            </div>
-        );
-    }
+const nav = document.getElementById("nav-bar");
 
-    connectedCallback() {
-        console.log("Connected");
-
-        if (!this.rendered) {
-            this.render();
-            this.rendered = true;
-        }
-    };
-
-    disconnectedCallback() {
-        console.error("Disconnected");
-    }
-}
-
-customElements.define('nav-bar', Nav);
+nav.innerHTML = `
+    <ul id="nav">
+        <li><a href="/home">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/register">Register</a></li>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+`;

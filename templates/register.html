@@ -9,16 +9,16 @@
     <script type="text/javascript" src="{{ url_for('static', filename='submit.js')}}" defer></script>
     <script type="text/javascript" src="{{ url_for('static', filename='nav.js')}}" defer></script>
 
-    <title>Login</title>
+    <title>Register</title>
 </head>
 <body>
     <div id="nav-bar"></div>
-    <div id="login-form">
+    <div id="register-form">
         <label for="username"> Username: </label>
         <input type="text" for="uname" id="uname"> <br/>
         <label for="password"> Password: </label>    
         <input type="password" for="pword" id="pword">
-        <button type="button" onclick="submit('/login')">Submit</button>
+        <button id="submitBtn" type="button" onclick="submit('/register')">Submit</button>
     </div>
 </body>
 </html>
