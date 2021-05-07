@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<title>{% block title %}{% endblock %}</title>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+<nav>
+    {% block nav %}
+    <ul class="nav">
+        {% if current_user.is_active %}
+        <li><a href="/home">Home</a></li>
+        <li><a href="/logout">Logout</a></li>
+        <li><a href="/create">Create</a></li>
+        {% else %}
+        <li><a href="/login">Login</a></li>
+        <li><a href="/register">Register</a></li>
+        {% endif %}
+    </ul>
+    {% endblock  %}
+</nav>
+<section>
+    <header>
+        {% block header %}{% endblock %}
+    </header>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="flash-message">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+</section>

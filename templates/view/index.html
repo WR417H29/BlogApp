@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block header %}
+<h1>Index</h1>
+{% endblock %}
+
+{% block content %}
+{% if current_user.is_active %}
+<p>Logged in as {{current_user}}</p>
+{% else %}
+<p>Not Logged In</p>
+{% endif %}
+<section class="posts">
+    {% for post in posts %}
+    <div class="post">
+        <h2 class="post-title">{{post.title}}</h2>
+        <p class="post-body">{{post.body}}</p>
+        <p class="post-footer">{{ User.query.filter_by(id=post.author_id).first().username }}
+            {{post.created_date.strftime('%d:%m:%Y')}}
+        </p>
+    </div>
+    {% endfor  %}
+</section>
+{% endblock %}
