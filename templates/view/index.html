@@ -5,7 +5,7 @@
 
 {% block content %}
 {% if current_user.is_active %}
-<p>Logged in as {{current_user}}</p>
+<p class="login-display">Logged in as {{current_user}}</p>
 {% else %}
 <p>Not Logged In</p>
 {% endif %}
