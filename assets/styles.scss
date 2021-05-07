@@ -18,10 +18,13 @@ p {
     .post-footer {
         font-size: 13px;
     }
+    .login-display {
+        color: red;
+    }
 }
 
-form {
-    .form-user {
-        display: flex;
+nav {
+    .nav {
+        list-style-type: none;
     }
 }
