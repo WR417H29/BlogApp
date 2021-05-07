@@ -1,7 +1,12 @@
-from flask import Flask, request, render_template, url_for, redirect, flash
+from flask import Flask, request, render_template, url_for, redirect, flash, get_flashed_messages
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_required, login_user, current_user, logout_user
+from flask_scss import Scss
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField
+from wtforms.validators import DataRequired, Length
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://fshuppprcznqku:c40eea0c5cc185e4cc9eb252ff51fb571f04b373cc612420338962638ceda414@ec2-54-155-35-88.eu-west-1.compute.amazonaws.com:5432/d325f9dtt49eu3'
@@ -11,70 +16,145 @@ app.config['SECRET_KEY'] = 'whatKey'
 db = SQLAlchemy(app)
 loginManager = LoginManager()
 loginManager.init_app(app)
+Scss(app, static_dir='static', asset_dir='assets')
+
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(30), nullable=False, unique=True)
     password = db.Column(db.String(300), nullable=False)
+    posts = db.relationship('Post', backref='user', lazy=True)
 
     def __repr__(self):
-        return self.username
+        return '<User %r>' % self.username
+
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(80), nullable=False)
+    body = db.Column(db.Text, nullable=False)
+    created_date = db.Column(
+        db.DateTime, nullable=False, default=datetime.now)
+
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def __repr__(self):
+        return '<Post %r>' % self.title
+
+
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
+
+class PostForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    body = TextAreaField('Body', validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
 
 @loginManager.user_loader
 def userLoader(userID):
     return User.query.get(int(userID))
 
+
 @app.route('/')
 def index():
-    return render_template('index.html', title="Index Route")
+    return render_template('view/index.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        return render_template('login.html')
-    
-    elif request.method == 'POST':
-        data = request.get_json()
-        users = User.query.all()
+        form = LoginForm()
 
-        return redirect('/home')
-        # user = User.query.filter_by(username).first()
-        # login_user(user)
+        return render_template('auth/login.html', form=form)
+
+    elif request.method == 'POST':
+        form = request.form
+        exists = User.query.filter_by(username=form['username']).first()
+
+        if not exists:
+            flash("User doesn't exist, please register an account first")
+            return redirect(url_for('register'))
+
+        if not check_password_hash(exists.password, form['password']):
+            flash("Incorrect password")
+            return redirect(url_for('login'))
+
+        login_user(exists)
+
+        return redirect(url_for('home'))
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if request.method =='GET':
-        return render_template('register.html')
-    
+    if request.method == 'GET':
+        form = LoginForm()
+
+        return render_template('auth/register.html', form=form)
+
     elif request.method == 'POST':
-        data = request.get_json()
-        users = User.query.all()
+        form = request.form
 
-        for user in users:
-            if data['username'] == user.username:
-                return render_template('error.html')
+        exists = User.query.filter_by(username=form['username']).first()
 
-        newUser = User(username=data['username'], password=generate_password_hash(data['password']))
+        if exists:
+            flash("User already exists")
+            return redirect(url_for('register'))
 
-        db.session.add(newUser)
-        db.session.commit()       
+        user = User(username=form['username'],
+                    password=generate_password_hash(form['password']))
 
-        return render_template('register.html')
+        db.session.add(user)
+        db.session.commit()
+
+        login_user(user)
+
+        return redirect(url_for('home'))
+
 
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     flash("Logged Out")
-    return redirect('/')
+    return redirect(url_for('login'))
 
-@app.route('/home')
+
+@app.route('/home', methods=['GET', 'POST'])
 @login_required
 def home():
-    return render_template('index.html', 
-        title="Home", 
-        content=f"Logged in as {current_user}", 
+    if request.method == 'GET':
+        posts = Post.query.all()
+        users = User.query.all()
+        return render_template('view/index.html', posts=posts, users=users, User=User)
+
+
+@app.route('/create', methods=['GET', 'POST'])
+@login_required
+def create():
+    if request.method == 'GET':
+        form = PostForm()
+
+        return render_template('view/create.html', form=form)
+
+    elif request.method == 'POST':
+        form = request.form
+
+        post = Post(
+            title=form['title'],
+            body=form['body'],
+            created_date=datetime.now(),
+            author_id=current_user.id
         )
+
+        db.session.add(post)
+        db.session.commit()
+
+        return redirect(url_for('home'))
+
 
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
