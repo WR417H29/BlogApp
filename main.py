@@ -34,7 +34,11 @@ class Post(db.Model):
     title = db.Column(db.String(80), nullable=False)
     body = db.Column(db.Text, nullable=False)
     created_date = db.Column(
-        db.DateTime, nullable=False, default=datetime.now)
+        db.DateTime, nullable=False, default=datetime.now
+    )
+    updated_date = db.Column(
+        db.DateTime, nullable=False, default=datetime.now
+    )
 
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
@@ -51,6 +55,11 @@ class LoginForm(FlaskForm):
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     body = TextAreaField('Body', validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
+
+class EditForm(FlaskForm):
+    body = TextAreaField('Edit body', validators=[DataRequired()])
     submit = SubmitField("Submit")
 
 
@@ -129,7 +138,8 @@ def home():
     if request.method == 'GET':
         posts = Post.query.all()
         users = User.query.all()
-        return render_template('view/index.html', posts=posts, users=users, User=User)
+
+        return render_template('view/index.html', posts=posts, User=User)
 
 
 @app.route('/create', methods=['GET', 'POST'])
@@ -152,6 +162,35 @@ def create():
 
         db.session.add(post)
         db.session.commit()
+
+        return redirect(url_for('home'))
+
+
+@app.route('/edit/<int:post_id>', methods=['GET', 'POST'])
+@login_required
+def edit(post_id):
+    post = Post.query.filter_by(id=post_id).first()
+    if post:
+        user = User.query.filter_by(id=post.author_id).first()
+
+    if request.method == 'GET':
+        form = EditForm()
+        if user:
+            if current_user.id == user.id:
+                return render_template('view/edit.html', post=post, User=user, edit=True, form=form)
+
+            return render_template('view/edit.html', post=post, User=user)
+
+        return render_template('view/edit.html')
+
+    elif request.method == 'POST':
+        form = request.form
+
+        if post:
+            if current_user.id == user.id:
+                post.body = form['body']
+                post.updated_date = datetime.now()
+                db.session.commit()
 
         return redirect(url_for('home'))
 
