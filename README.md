@@ -1,3 +1,19 @@
-# Chat App using Flask
+# Chat app using Flask
 
-Using a Heroku Postgresql Database
+## Modules:
+
+-   Flask-SQLAlchemy
+-   Flask-Scss
+-   Flask-login
+-   Flask-WTForms
+-   Werkzeug
+
+## Features:
+
+[x] Register
+[x] Login
+[x] Logout
+[x] Create Post
+[x] Edit Post
+[ ] Delete Post
+[ ] Change Password
