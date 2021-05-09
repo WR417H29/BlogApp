@@ -1,16 +1,15 @@
-section {
-    .posts {
-        display: flex;
-    }
-}
+$important: red;
 
 div {
     .post {
-        background-color: rgb(26, 41, 36);
+        background-color: blue;
         padding: 1vw;
         padding-top: 0.5vw;
         padding-bottom: 0.3vw;
-        border: black solid 2px;
+        border: 2px solid black;
+    }
+    .flash-message {
+        color: $important;
     }
 }
 
@@ -19,7 +18,7 @@ p {
         font-size: 13px;
     }
     .login-display {
-        color: red;
+        color: $important;
     }
 }
 

@@ -1,13 +1,12 @@
-section .posts {
-    display: flex;
-}
-
 div .post {
-    background-color: #1a2924;
+    background-color: blue;
     padding: 1vw;
     padding-top: 0.5vw;
     padding-bottom: 0.3vw;
-    border: black solid 2px;
+    border: 2px solid black;
+}
+div .flash-message {
+    color: red;
 }
 
 p .post-footer {
