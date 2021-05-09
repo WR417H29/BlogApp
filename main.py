@@ -82,6 +82,7 @@ def login():
 
     elif request.method == 'POST':
         form = request.form
+        form['username'] = form['username'].lower()
         exists = User.query.filter_by(username=form['username']).first()
 
         if not exists:
@@ -113,7 +114,7 @@ def register():
             flash("User already exists")
             return redirect(url_for('register'))
 
-        user = User(username=form['username'],
+        user = User(username=form['username'].lower(),
                     password=generate_password_hash(form['password']))
 
         db.session.add(user)
