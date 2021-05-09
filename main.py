@@ -82,8 +82,9 @@ def login():
 
     elif request.method == 'POST':
         form = request.form
-        form['username'] = form['username'].lower()
-        exists = User.query.filter_by(username=form['username']).first()
+        username = form['username'].lower()
+
+        exists = User.query.filter_by(username=username).first()
 
         if not exists:
             flash("User doesn't exist, please register an account first")
