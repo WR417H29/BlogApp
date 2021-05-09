@@ -3,7 +3,6 @@
 ## Modules:
 
 -   Flask-SQLAlchemy
--   Flask-Scss
 -   Flask-login
 -   Flask-WTForms
 -   Werkzeug
