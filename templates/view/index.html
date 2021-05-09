@@ -14,7 +14,8 @@
     <div class="post">
         <h2 class="post-title">{{post.title}}</h2>
         <p class="post-body">{{post.body}}</p>
-        <p class="post-footer">{{ User.query.filter_by(id=post.author_id).first().username }}
+        <p class="post-footer">
+            {{ User.query.filter_by(id=post.author_id).first().username }}
             {{post.created_date.strftime('%d:%m:%Y')}}
         </p>
     </div>
