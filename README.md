@@ -10,10 +10,10 @@
 
 ## Features:
 
-[x] Register
-[x] Login
-[x] Logout
-[x] Create Post
-[x] Edit Post
-[ ] Delete Post
-[ ] Change Password
+-   [x] Register
+-   [x] Login
+-   [x] Logout
+-   [x] Create Post
+-   [x] Edit Post
+-   [ ] Delete Post
+-   [ ] Change Password
