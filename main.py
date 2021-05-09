@@ -1,7 +1,6 @@
 from flask import Flask, request, render_template, url_for, redirect, flash, get_flashed_messages
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_required, login_user, current_user, logout_user
-from flask_scss import Scss
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Length
@@ -16,7 +15,6 @@ app.config['SECRET_KEY'] = 'whatKey'
 db = SQLAlchemy(app)
 loginManager = LoginManager()
 loginManager.init_app(app)
-Scss(app, static_dir='static', asset_dir='assets')
 
 
 class User(UserMixin, db.Model):
