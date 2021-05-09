@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block header %}
+<h1>Edit Post</h1>
+{% endblock %}
+
+{% block content %}
+{% if edit %}
+{{ post.title }} <br />
+<form method="POST" action='/edit/{{post.id}}'>
+    {{ form.body.label }} <br />
+    {{ form.body(size=50) }} <br />
+    {{ form.submit }}
+</form>
+{% endif %}
+{% endblock %}
