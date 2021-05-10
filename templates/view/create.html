@@ -10,7 +10,7 @@
 <p>Not Logged In</p>
 {% endif %}
 <section class="new-post">
-    <form method="POST" action="/create">
+    <form method="POST" action="/post/create">
         {{ form.title.label }}: <br />
         {{ form.title(size=20) }} <br />
 

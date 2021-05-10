@@ -8,7 +8,7 @@
 <h3>
     {{ post.title }} <br />
 </h3>
-<form method="POST" action='/edit/{{post.id}}'>
+<form method="POST" action='/post/edit/{{post.id}}'>
     {{ form.title.label }} <br />
     {{ form.title(size=30) }} <br />
     {{ form.body.label }} <br />
