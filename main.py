@@ -119,6 +119,10 @@ def create():
     elif request.method == 'POST':
         form = request.form
 
+        if len(form['title']) > 24:
+            flash("Title too long")
+            return redirect(url_for('create'))
+
         if len(form['body']) > 240:
             flash("Please use less characters")
             return redirect(url_for('create'))
@@ -162,6 +166,10 @@ def edit(post_id):
 
     elif request.method == 'POST':
         form = request.form
+
+        if len(form['body']) > 240:
+            flash("Please use less characters")
+            return redirect(url_for('home'))
 
         if post:
             if current_user.id == user.id:
