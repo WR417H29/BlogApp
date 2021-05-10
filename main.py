@@ -175,6 +175,10 @@ def create():
 def edit(post_id):
     post = Post.query.filter_by(id=post_id).first()
     if post:
+        if current_user.id != post.author_id:
+            flash("You do not have permission to edit this post")
+            return redirect(url_for('home'))
+
         user = User.query.filter_by(id=post.author_id).first()
 
     if request.method == 'GET':
