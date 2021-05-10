@@ -146,7 +146,7 @@ def home():
         return render_template('view/index.html', posts=posts, User=User)
 
 
-@app.route('/create', methods=['GET', 'POST'])
+@app.route('/post/create', methods=['GET', 'POST'])
 @login_required
 def create():
     if request.method == 'GET':
@@ -170,7 +170,7 @@ def create():
         return redirect(url_for('home'))
 
 
-@app.route('/edit/<int:post_id>', methods=['GET', 'POST'])
+@app.route('/post/edit/<int:post_id>', methods=['GET', 'POST'])
 @login_required
 def edit(post_id):
     post = Post.query.filter_by(id=post_id).first()
@@ -202,11 +202,12 @@ def edit(post_id):
         return redirect(url_for('home'))
 
 
-@app.route('/delete/<int:post_id>', methods=['GET', 'POST'])
+@app.route('/post/delete/<int:post_id>', methods=['GET', 'POST'])
 @login_required
 def delete(post_id):
-    post = Post.query.filter_by(id=post_id).delete()
-    db.session.commit()
+    if current_user.id == post_id:
+        post = Post.query.filter_by(id=post_id).delete()
+        db.session.commit()
 
     return redirect(url_for('home'))
 
