@@ -32,7 +32,8 @@
     </div>
     {% for reply in replies %}
     {% if reply.post_id == post.id %}
-    <div class="reply-body">{{reply.reply}}</div>
+    <div class="reply-body">
+        {{reply.reply}} - {{ User.query.filter_by(id=reply.author_id).first().username.capitalize() }} </div>
     {% endif %}
     {% endfor %}
     {% endfor  %}
