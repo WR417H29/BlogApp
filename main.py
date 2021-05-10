@@ -109,6 +109,11 @@ def login():
         form = request.form
         username = form['username'].lower()
 
+        for char in form['username']:
+            if char.lower() not in string.ascii_lowercase and char not in string.digits:
+                flash("Invalid Username")
+                return redirect(url_for('register'))
+
         exists = User.query.filter_by(username=username).first()
 
         if not exists:
@@ -240,6 +245,10 @@ def edit(post_id):
 def delete(post_id):
     post = Post.query.filter_by(id=post_id).first()
     if post:
+        replies = Reply.query.filter_by(post_id=post_id).all()
+        for reply in replies:
+            db.session.delete(reply)
+
         if current_user.id != post.author_id:
             flash("You do not have permission to delete this post")
             return redirect(url_for('home'))
