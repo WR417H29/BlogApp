@@ -118,7 +118,7 @@ def login():
 
         if not exists:
             flash("User doesn't exist, please register an account first")
-            return redirect(url_for('register'))
+            return redirect(url_for('login'))
 
         if not check_password_hash(exists.password, form['password']):
             flash("Incorrect password")
