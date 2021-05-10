@@ -178,7 +178,10 @@ def edit(post_id):
         user = User.query.filter_by(id=post.author_id).first()
 
     if request.method == 'GET':
-        form = EditForm()
+        form = EditForm(
+            title=post.title,
+            body=post.body
+        )
         if user:
             if current_user.id == user.id:
                 return render_template('view/edit.html', post=post, User=user, edit=True, form=form)
