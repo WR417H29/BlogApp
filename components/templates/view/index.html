@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %} Home {% endblock %}
+{% block header %}
+<h1>Home</h1>
+{% endblock %}
+
+
+{% block content %}
+{% if current_user.is_active %}
+<p class="login-display">Logged in as {{ current_user.username.capitalize() }}</p>
+{% else %}
+<p>Not Logged In</p>
+{% endif %}
+<section class="posts">
+    {% for post in posts %}
+    <div class="post">
+        <h2 class="post-title">{{post.title}}</h2>
+
+        <p class="post-body">{{post.body}} </p>
+
+        <p class="post-footer">
+            {{ User.query.filter_by(id=post.author_id).first().username }}
+            {{ post.created_date.strftime("%d %b, %H:%M ")}}
+        </p>
+        {% if current_user.id == post.author_id %}
+        <a class="post-edit" href="/post/edit/{{post.id}}">Edit Post</a>
+        <a class="post-delete" href="/post/delete/{{post.id}}">Delete Post</a>
+        <a class="post-reply" href="/post/reply/{{post.id}}">Reply To Post</a>
+        {% else %}
+        <a class="post-reply" href="/post/reply/{{post.id}}">Reply To Post</a>
+        {% endif %}
+    </div>
+    {% for reply in replies %}
+    {% if reply.post_id == post.id %}
+    <div class="reply-body">
+        {{reply.reply}} - {{ User.query.filter_by(id=reply.author_id).first().username.capitalize() }} </div>
+    {% endif %}
+    {% endfor %}
+    {% endfor  %}
+</section>
+{% endblock %}

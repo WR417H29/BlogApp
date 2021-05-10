@@ -1,0 +1,20 @@
+div.post {
+    padding: 1vw;
+    padding-top: 0.5vw;
+    padding-bottom: 0.3vw;
+    border: 2px solid black;
+}
+div.flash-message {
+    color: red;
+}
+
+p.post-footer {
+    font-size: 13px;
+}
+p.login-display {
+    color: red;
+}
+
+div.reply-body {
+    text-indent: 16px;
+}

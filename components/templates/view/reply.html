@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %} Reply {% endblock %}
+
+{% block header %}
+<h1>Reply</h1>
+{% endblock %}
+
+{% block content %}
+<h3>{{post.title}}</h3>
+<form method="POST" action="/post/reply/{{post.id}}">
+    {{ form.body.label }}: <br />
+    {{ form.body(size=50) }} <br />
+
+    {{ form.submit }}
+</form>
+{% endblock %}

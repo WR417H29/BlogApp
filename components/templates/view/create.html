@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %} Create Post {% endblock %}
+
+{% block header %}
+<h1>Create Post</h1>
+{% endblock %}
+
+{% block content %}
+{% if current_user.is_active %}
+<p>Logged in as {{ current_user.username.capitalize() }}</p>
+{% else %}
+<p>Not Logged In</p>
+{% endif %}
+<section class="new-post">
+    <form method="POST" action="/post/create">
+        {{ form.title.label }}: <br />
+        {{ form.title(size=20) }} <br />
+
+        {{ form.body.label }}: <br />
+        {{ form.body(size=50) }} <br />
+
+        {{ form.submit }}
+    </form>
+</section>
+</section>
+{% endblock %}
