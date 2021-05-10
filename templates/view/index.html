@@ -14,19 +14,14 @@
     <div class="post">
         <h2 class="post-title">{{post.title}}</h2>
 
-        {% if current_user.id == post.author_id %}
-        <p class="post-body">{{post.body}}
-            <a class="post-edit" href="/edit/{{post.id}}">Edit</a>
-        </p>
-        {% else %}
-        <p class="post-body">{{post.body}}</p>
-        {% endif %}
+        <p class="post-body">{{post.body}} </p>
 
         <p class="post-footer">
             {{ User.query.filter_by(id=post.author_id).first().username }}
             {{post.created_date.strftime('%d:%m:%Y')}}
         </p>
         {% if current_user.id == post.author_id %}
+        <a class="post-edit" href="/edit/{{post.id}}">Edit</a>
         <a class="post-delete" href="/delete/{{post.id}}">Delete Post</a>
         {% endif %}
     </div>
