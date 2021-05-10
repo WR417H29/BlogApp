@@ -20,7 +20,7 @@
 
         <p class="post-footer">
             {{ User.query.filter_by(id=post.author_id).first().username }}
-            {{ post.updated_date.strftime("%d %b, %H:%M ")}}
+            {{ post.created_date.strftime("%d %b, %H:%M ")}}
         </p>
         {% if current_user.id == post.author_id %}
         <a class="post-edit" href="/post/edit/{{post.id}}">Edit Post</a>
