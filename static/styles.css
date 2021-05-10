@@ -14,3 +14,7 @@ p.post-footer {
 p.login-display {
     color: red;
 }
+
+div.reply-body {
+    text-indent: 16px;
+}
