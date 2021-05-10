@@ -26,6 +26,9 @@
             {{ User.query.filter_by(id=post.author_id).first().username }}
             {{post.created_date.strftime('%d:%m:%Y')}}
         </p>
+        {% if current_user.id == post.author_id %}
+        <a class="post-delete" href="/delete/{{post.id}}">Delete Post</a>
+        {% endif %}
     </div>
     {% endfor  %}
 </section>

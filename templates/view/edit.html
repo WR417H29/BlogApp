@@ -5,8 +5,12 @@
 
 {% block content %}
 {% if edit %}
-{{ post.title }} <br />
+<h3>
+    {{ post.title }} <br />
+</h3>
 <form method="POST" action='/edit/{{post.id}}'>
+    {{ form.title.label }} <br />
+    {{ form.title(size=30) }} <br />
     {{ form.body.label }} <br />
     {{ form.body(size=50) }} <br />
     {{ form.submit }}
