@@ -8,81 +8,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import string
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://fshuppprcznqku:c40eea0c5cc185e4cc9eb252ff51fb571f04b373cc612420338962638ceda414@ec2-54-155-35-88.eu-west-1.compute.amazonaws.com:5432/d325f9dtt49eu3'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'whatKey'
-
-db = SQLAlchemy(app)
-loginManager = LoginManager()
-loginManager.init_app(app)
-
-
-class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    username = db.Column(db.String(30), nullable=False, unique=True)
-    password = db.Column(db.String(300), nullable=False)
-    posts = db.relationship('Post', backref='user', lazy=True)
-
-    def __repr__(self):
-        return '<User %r>' % self.username
-
-
-class Post(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    title = db.Column(db.String(80), nullable=False)
-    body = db.Column(db.Text, nullable=False)
-    created_date = db.Column(
-        db.DateTime, nullable=False, default=datetime.now
-    )
-    updated_date = db.Column(
-        db.DateTime, nullable=False, default=datetime.now
-    )
-
-    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-
-    def __repr__(self):
-        return '<Post %r>' % self.title
-
-
-class Reply(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    reply = db.Column(db.Text, nullable=False)
-    created_date = db.Column(
-        db.DateTime, nullable=False, default=datetime.now
-    )
-    updated_date = db.Column(
-        db.DateTime, nullable=False, default=datetime.now
-    )
-
-    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
-    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-
-    def __repr__(self):
-        return '<Reply %r>' % self.reply
-
-
-class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    submit = SubmitField("Submit")
-
-
-class PostForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
-    body = TextAreaField('Body', validators=[DataRequired()])
-    submit = SubmitField("Submit")
-
-
-class EditForm(FlaskForm):
-    title = StringField('Edit Title', validators=[DataRequired()])
-    body = TextAreaField('Edit body', validators=[DataRequired()])
-    submit = SubmitField("Submit")
-
-
-class ReplyForm(FlaskForm):
-    body = TextAreaField('Reply', validators=[DataRequired()])
-    submit = SubmitField("Submit")
+from components import app, db, loginManager
+from components.forms import LoginForm, PostForm, EditForm, ReplyForm
+from components.models import User, Post, Reply
 
 
 @loginManager.user_loader
@@ -191,6 +119,10 @@ def create():
     elif request.method == 'POST':
         form = request.form
 
+        if len(form['body']) > 240:
+            flash("Please use less characters")
+            return redirect(url_for('create'))
+
         post = Post(
             title=form['title'],
             body=form['body'],
@@ -275,6 +207,10 @@ def reply(post_id):
     elif request.method == 'POST':
         form = request.form
 
+        if len(form['body']) > 240:
+            flash("Please use less characters")
+            return redirect(f'/post/reply/{post_id}')
+
         reply = Reply(
             reply=form['body'],
             created_date=datetime.now(),
@@ -290,4 +226,4 @@ def reply(post_id):
 
 
 if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+    app.run(port=5000)
