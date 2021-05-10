@@ -57,6 +57,7 @@ class PostForm(FlaskForm):
 
 
 class EditForm(FlaskForm):
+    title = StringField('Edit Title', validators=[DataRequired()])
     body = TextAreaField('Edit body', validators=[DataRequired()])
     submit = SubmitField("Submit")
 
@@ -193,6 +194,15 @@ def edit(post_id):
                 db.session.commit()
 
         return redirect(url_for('home'))
+
+
+@app.route('/delete/<int:post_id>', methods=['GET', 'POST'])
+@login_required
+def delete(post_id):
+    post = Post.query.filter_by(id=post_id).delete()
+    db.session.commit()
+
+    return redirect(url_for('home'))
 
 
 if __name__ == "__main__":
