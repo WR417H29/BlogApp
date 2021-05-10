@@ -14,5 +14,5 @@
 -   [x] Logout
 -   [x] Create Post
 -   [x] Edit Post
--   [ ] Delete Post
+-   [x] Delete Post
 -   [ ] Change Password
