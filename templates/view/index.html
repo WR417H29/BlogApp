@@ -21,8 +21,8 @@
             {{post.created_date.strftime('%d:%m:%Y')}}
         </p>
         {% if current_user.id == post.author_id %}
-        <a class="post-edit" href="/edit/{{post.id}}">Edit</a>
-        <a class="post-delete" href="/delete/{{post.id}}">Delete Post</a>
+        <a class="post-edit" href="/post/edit/{{post.id}}">Edit Post</a>
+        <a class="post-delete" href="/post/delete/{{post.id}}">Delete Post</a>
         {% endif %}
     </div>
     {% endfor  %}
