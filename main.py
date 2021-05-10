@@ -6,6 +6,7 @@ from wtforms import StringField, PasswordField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Length
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+import string
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://fshuppprcznqku:c40eea0c5cc185e4cc9eb252ff51fb571f04b373cc612420338962638ceda414@ec2-54-155-35-88.eu-west-1.compute.amazonaws.com:5432/d325f9dtt49eu3'
@@ -132,6 +133,11 @@ def register():
 
     elif request.method == 'POST':
         form = request.form
+
+        for char in form['username']:
+            if char.lower() not in string.ascii_lowercase and char not in string.digits:
+                flash("Invalid Username")
+                return redirect(url_for('register'))
 
         exists = User.query.filter_by(username=form['username']).first()
 
