@@ -69,6 +69,9 @@ def userLoader(userID):
 
 @app.route('/')
 def index():
+    if current_user.is_active:
+        return redirect(url_for('home'))
+
     return render_template('view/index.html')
 
 
