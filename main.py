@@ -44,6 +44,23 @@ class Post(db.Model):
         return '<Post %r>' % self.title
 
 
+class Reply(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    reply = db.Column(db.Text, nullable=False)
+    created_date = db.Column(
+        db.DateTime, nullable=False, default=datetime.now
+    )
+    updated_date = db.Column(
+        db.DateTime, nullable=False, default=datetime.now
+    )
+
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def __repr__(self):
+        return '<Reply %r>' % self.reply
+
+
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
@@ -59,6 +76,11 @@ class PostForm(FlaskForm):
 class EditForm(FlaskForm):
     title = StringField('Edit Title', validators=[DataRequired()])
     body = TextAreaField('Edit body', validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
+
+class ReplyForm(FlaskForm):
+    body = TextAreaField('Reply', validators=[DataRequired()])
     submit = SubmitField("Submit")
 
 
@@ -142,8 +164,9 @@ def home():
     if request.method == 'GET':
         posts = Post.query.all()
         users = User.query.all()
+        replies = Reply.query.all()
 
-        return render_template('view/index.html', posts=posts, User=User)
+        return render_template('view/index.html', posts=posts, User=User, replies=replies)
 
 
 @app.route('/post/create', methods=['GET', 'POST'])
@@ -219,6 +242,36 @@ def delete(post_id):
         db.session.commit()
 
     return redirect(url_for('home'))
+
+
+@app.route('/post/reply/<int:post_id>', methods=['GET', 'POST'])
+@login_required
+def reply(post_id):
+    post = Post.query.filter_by(id=post_id).first()
+    if request.method == 'GET':
+        form = ReplyForm()
+
+        if not post:
+            flash("Cannot reply to post that doesn't exist")
+            return redirect(url_for('home'))
+
+        return render_template('view/reply.html', post=post, form=form)
+
+    elif request.method == 'POST':
+        form = request.form
+
+        reply = Reply(
+            reply=form['body'],
+            created_date=datetime.now(),
+            updated_date=datetime.now(),
+            post_id=post_id,
+            author_id=current_user.id
+        )
+
+        db.session.add(reply)
+        db.session.commit()
+
+        return redirect(url_for('home'))
 
 
 if __name__ == "__main__":
