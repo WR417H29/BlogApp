@@ -17,6 +17,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(80), nullable=False)
     body = db.Column(db.Text, nullable=False)
+    edited = db.Column(db.Boolean, nullable=False, default=False)
     created_date = db.Column(
         db.DateTime, nullable=False, default=datetime.now
     )
@@ -33,6 +34,7 @@ class Post(db.Model):
 class Reply(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     reply = db.Column(db.Text, nullable=False)
+    edited = db.Column(db.Boolean, nullable=False, default=False)
     created_date = db.Column(
         db.DateTime, nullable=False, default=datetime.now
     )

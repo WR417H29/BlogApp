@@ -21,6 +21,9 @@
         <p class="post-footer">
             {{ User.query.filter_by(id=post.author_id).first().username.capitalize() }}
             {{ post.created_date.strftime("%d %b, %H:%M ")}}
+            {% if post.edited %}
+            (Edited)
+            {% endif %}
         </p>
         {% if current_user.id == post.author_id %}
             <a class="post-edit" href="/post/edit/{{post.id}}">Edit Post</a>
@@ -35,14 +38,22 @@
         {% if reply.post_id == post.id %}
             {% if current_user.id == reply.author_id %}
                 <div class="reply-body">
-                    {{reply.reply}} - 
+                    {{reply.reply}}
+                    {% if reply.edited %}
+                    (Edited)
+                    {% endif %}
+                    - 
                     {{ User.query.filter_by(id=reply.author_id).first().username.capitalize() }}
                     <a class="reply-edit" href="/post/reply/edit/{{reply.id}}">Edit Reply</a>
                     <a class="reply-delete" href="/post/reply/delete/{{reply.id}}">Delete Reply</a>
                 </div>
             {% else %}
                 <div class="reply-body">
-                    {{reply.reply}} -
+                    {{reply.reply}}
+                    {% if reply.edited %}
+                    (Edited)
+                    {% endif %}
+                    -
                     {{ User.query.filter_by(id=reply.author_id).first().username.capitalize() }}
                 </div>
             {% endif %}

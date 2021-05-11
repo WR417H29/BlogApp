@@ -119,11 +119,11 @@ def create():
     elif request.method == 'POST':
         form = request.form
 
-        if len(form['title']) > 24:
+        if len(form['title']) > 30:
             flash("Title too long")
             return redirect(url_for('create'))
 
-        if len(form['body']) > 240:
+        if len(form['body']) > 300:
             flash("Please use less characters")
             return redirect(url_for('create'))
 
@@ -131,7 +131,8 @@ def create():
             title=form['title'],
             body=form['body'],
             created_date=datetime.now(),
-            author_id=current_user.id
+            author_id=current_user.id,
+            edited=False
         )
 
         db.session.add(post)
@@ -167,13 +168,18 @@ def edit_post(post_id):
     elif request.method == 'POST':
         form = request.form
 
-        if len(form['body']) > 240:
+        if len(form['title']) > 30:
+            flash("Please use a smaller title")
+            return redirect(f'/post/edit/{post_id}')
+
+        if len(form['body']) > 300:
             flash("Please use less characters")
-            return redirect(url_for('home'))
+            return redirect(f'/post/edit/{post_id}')
 
         if post:
             if current_user.id == user.id:
                 post.body = form['body']
+                post.edited = True
                 post.updated_date = datetime.now()
                 db.session.commit()
 
@@ -216,7 +222,7 @@ def reply(post_id):
     elif request.method == 'POST':
         form = request.form
 
-        if len(form['body']) > 240:
+        if len(form['body']) > 300:
             flash("Please use less characters")
             return redirect(f'/post/reply/{post_id}')
 
@@ -261,9 +267,14 @@ def edit_reply(reply_id):
     elif request.method == 'POST':
         form = request.form
 
+        if len(form['body']) > 300:
+            flash("Please use less characters")
+            return redirect(f'/post/reply/edit/{reply_id}')
+
         if reply:
             if current_user.id == reply.author_id:
                 reply.reply = form['body']
+                reply.edited = True
                 reply.updated_date = datetime.now()
                 db.session.commit()
 
