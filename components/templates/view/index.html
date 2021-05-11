@@ -19,23 +19,36 @@
         <p class="post-body">{{post.body}} </p>
 
         <p class="post-footer">
-            {{ User.query.filter_by(id=post.author_id).first().username }}
+            {{ User.query.filter_by(id=post.author_id).first().username.capitalize() }}
             {{ post.created_date.strftime("%d %b, %H:%M ")}}
         </p>
         {% if current_user.id == post.author_id %}
-        <a class="post-edit" href="/post/edit/{{post.id}}">Edit Post</a>
-        <a class="post-delete" href="/post/delete/{{post.id}}">Delete Post</a>
-        <a class="post-reply" href="/post/reply/{{post.id}}">Reply To Post</a>
+            <a class="post-edit" href="/post/edit/{{post.id}}">Edit Post</a>
+            <a class="post-delete" href="/post/delete/{{post.id}}">Delete Post</a>
+            <a class="post-reply" href="/post/reply/{{post.id}}">Reply To Post</a>
         {% else %}
-        <a class="post-reply" href="/post/reply/{{post.id}}">Reply To Post</a>
+            <a class="post-reply" href="/post/reply/{{post.id}}">Reply To Post</a>
         {% endif %}
     </div>
+
     {% for reply in replies %}
-    {% if reply.post_id == post.id %}
-    <div class="reply-body">
-        {{reply.reply}} - {{ User.query.filter_by(id=reply.author_id).first().username.capitalize() }} </div>
-    {% endif %}
+        {% if reply.post_id == post.id %}
+            {% if current_user.id == reply.author_id %}
+                <div class="reply-body">
+                    {{reply.reply}} - 
+                    {{ User.query.filter_by(id=reply.author_id).first().username.capitalize() }}
+                    <a class="reply-edit" href="/post/reply/edit/{{reply.id}}">Edit Reply</a>
+                    <a class="reply-delete" href="/post/reply/delete/{{reply.id}}">Delete Reply</a>
+                </div>
+            {% else %}
+                <div class="reply-body">
+                    {{reply.reply}} -
+                    {{ User.query.filter_by(id=reply.author_id).first().username.capitalize() }}
+                </div>
+            {% endif %}
+        {% endif %}
     {% endfor %}
+
     {% endfor  %}
 </section>
 {% endblock %}

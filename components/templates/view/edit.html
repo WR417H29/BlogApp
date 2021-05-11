@@ -2,11 +2,12 @@
 {% block title %} Edit Post {% endblock %}
 
 {% block header %}
-<h1>Edit Post</h1>
+<h1>Edit {{ editType.capitalize() }}</h1>
 {% endblock %}
 
 {% block content %}
 {% if edit %}
+{% if editType == "post" %}
 <h3>
     {{ post.title }} <br />
 </h3>
@@ -17,5 +18,15 @@
     {{ form.body(size=50) }} <br />
     {{ form.submit }}
 </form>
+{% elif editType == "reply" %}
+<h3>
+    {{ reply.title }} <br />
+</h3>
+<form method="POST" action='/post/reply/edit/{{post.id}}'>
+    {{ form.body.label }} <br />
+    {{ form.body(size=50) }} <br />
+    {{ form.submit }}
+</form>
+{% endif %}
 {% endif %}
 {% endblock %}
