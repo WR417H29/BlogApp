@@ -238,12 +238,12 @@ def reply(post_id):
 @login_required
 def edit_reply(reply_id):
     reply = Reply.query.filter_by(id=reply_id).first()
-    post = Post.query.filter_by(id=reply.post_id).first()
     if reply:
         if current_user.id != reply.author_id:
             flash("You do not have permission to edit this reply")
             return redirect(url_for('home'))
 
+        post = Post.query.filter_by(id=reply.post_id).first()
         user = User.query.filter_by(id=reply.author_id).first()
 
     if request.method == 'GET':
