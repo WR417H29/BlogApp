@@ -142,7 +142,7 @@ def create():
 
 @app.route('/post/edit/<int:post_id>', methods=['GET', 'POST'])
 @login_required
-def edit(post_id):
+def edit_post(post_id):
     post = Post.query.filter_by(id=post_id).first()
     if post:
         if current_user.id != post.author_id:
@@ -158,7 +158,7 @@ def edit(post_id):
         )
         if user:
             if current_user.id == user.id:
-                return render_template('view/edit.html', post=post, User=user, edit=True, form=form)
+                return render_template('view/edit.html', editType="post", post=post, User=user, edit=True, form=form, )
 
             return render_template('view/edit.html', post=post, User=user)
 
@@ -182,16 +182,17 @@ def edit(post_id):
 
 @app.route('/post/delete/<int:post_id>', methods=['GET', 'POST'])
 @login_required
-def delete(post_id):
+def delete_post(post_id):
     post = Post.query.filter_by(id=post_id).first()
     if post:
+        if current_user.id != post.author_id:
+            flash("You do not have permission to delete this post")
+            return redirect(url_for('home'))
+
         replies = Reply.query.filter_by(post_id=post_id).all()
         for reply in replies:
             db.session.delete(reply)
 
-        if current_user.id != post.author_id:
-            flash("You do not have permission to delete this post")
-            return redirect(url_for('home'))
 
         db.session.delete(post)
         db.session.commit()
@@ -231,6 +232,58 @@ def reply(post_id):
         db.session.commit()
 
         return redirect(url_for('home'))
+
+
+@app.route('/post/reply/edit/<int:reply_id>', methods=['GET', 'POST'])
+@login_required
+def edit_reply(reply_id):
+    reply = Reply.query.filter_by(id=reply_id).first()
+    post = Post.query.filter_by(id=reply.post_id).first()
+    if reply:
+        if current_user.id != reply.author_id:
+            flash("You do not have permission to edit this reply")
+            return redirect(url_for('home'))
+
+        user = User.query.filter_by(id=reply.author_id).first()
+
+    if request.method == 'GET':
+        form = EditForm(
+            body=reply.reply
+        )
+        if user:
+            if current_user.id == user.id:
+                return render_template('view/edit.html', editType="reply", reply=reply, User=user, edit=True, form=form, post=post)
+
+            return render_template('view/edit.html', reply=reply, User=user)
+
+        return render_template('view/edit.html')
+
+    elif request.method == 'POST':
+        form = request.form
+
+        if reply:
+            if current_user.id == reply.author_id:
+                reply.reply = form['body']
+                reply.updated_date = datetime.now()
+                db.session.commit()
+
+        return redirect(url_for('home'))
+
+
+@app.route('/post/reply/delete/<int:reply_id>', methods=['GET', 'POST'])
+@login_required
+def delete_reply(reply_id):
+    reply = Reply.query.filter_by(id=reply_id).first()
+    if reply:
+
+        if current_user.id != reply.author_id:
+            flash("You do not have permission to delete this reply")
+            return redirect(url_for('home'))
+
+        db.session.delete(reply)
+        db.session.commit()
+    
+    return redirect(url_for('home'))
 
 
 if __name__ == "__main__":
