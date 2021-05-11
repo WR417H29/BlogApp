@@ -101,9 +101,9 @@ def logout():
 @login_required
 def home():
     if request.method == 'GET':
-        posts = Post.query.all()
+        posts = Post.query.order_by(Post.created_date).all()
         users = User.query.all()
-        replies = Reply.query.all()
+        replies = Reply.query.order_by(Reply.created_date).all()
 
         return render_template('view/index.html', posts=posts, User=User, replies=replies)
 
