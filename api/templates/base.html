@@ -2,9 +2,9 @@
 <title>{% block title %}{% endblock %} - Wraith Blog App </title>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 <title>Wraith Blog App</title>
-<nav class="nav">
+<nav>
     {% block nav %}
-    <ul>
+    <ul class="nav">
         {% if current_user.is_active %}
         <li><a href="/home">Home</a></li>
         <li><a href="/logout">Logout</a></li>

@@ -18,3 +18,7 @@ p.login-display {
 div.reply-body {
     text-indent: 16px;
 }
+
+ul.nav {
+    list-style-type: none;
+}

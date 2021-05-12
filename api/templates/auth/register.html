@@ -7,9 +7,9 @@
 
 {% block content %}
 <form class="form-user" method="POST" action="/register">
-    {{ form.username.label }} {{ form.username(size=30) }} <br />
+    {{ form.username.label }} {{ form.username(size=30, autocomplete="off") }} <br />
 
-    {{ form.password.label }} {{ form.password(size=30) }} <br />
+    {{ form.password.label }} {{ form.password(size=30, autocomplete="off") }} <br />
 
     {{ form.submit }}
 </form>
