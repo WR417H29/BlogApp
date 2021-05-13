@@ -1,10 +1,20 @@
 div.post {
-    padding: 1vw;
+    margin: 1px;
+    padding-left: 1vw;
+    padding-right: 29vw;
     padding-top: 0.5vw;
     padding-bottom: 0.8vw;
     border: 1px solid black;
-    border-radius: 10px;
+    border-radius: 15px;
 }
+
+div.cont {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: left;
+}
+
 div.flash-message {
     color: red;
 }
@@ -12,13 +22,12 @@ div.flash-message {
 p.post-footer {
     font-size: 13px;
 }
+
 p.login-display {
     color: red;
 }
 
 div.reply-body {
-    border: 1px dotted gray;
-    text-indent: 16px;
     margin-bottom: 5px;
 }
 
@@ -65,4 +74,10 @@ a.reply-button {
     font-size: x-small;
     padding: 3px;
     border-radius: 0;
+}
+
+h1.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

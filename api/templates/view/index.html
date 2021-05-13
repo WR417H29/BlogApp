@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %} Home {% endblock %}
 {% block header %}
-<h1>Home</h1>
+<h1 class="header">Home</h1>
 {% endblock %}
 
 
@@ -13,49 +13,55 @@
 {% endif %}
 <section class="posts">
     {% for post in posts %}
-    <div class="post">
-        <h2 class="post-title">{{post.title}}</h2>
+    <div class="cont">
+        <div class="post">
+            <h2 class="post-title">{{post.title}}</h2>
 
-        <p class="post-body">{{post.body}} </p>
+            <p class="post-body">{{post.body}} </p>
 
-        <p class="post-footer">
-            {{ User.query.filter_by(id=post.author_id).first().username.capitalize() }}
-            {{ post.created_date.strftime("%d %b, %H:%M ")}}
-            {% if post.edited %}
-            (Edited)
+            <p class="post-footer">
+                {{ User.query.filter_by(id=post.author_id).first().username.capitalize() }}
+                {{ post.created_date.strftime("%d %b, %H:%M ")}}
+                {% if post.edited %}
+                (Edited)
+                {% endif %}
+            </p>
+            {% if current_user.id == post.author_id %}
+            <a class="button post-button post-edit" href="/post/edit/{{post.id}}">Edit</a>
+            <a class="button post-button post-delete" href="/post/delete/{{post.id}}">Delete</a>
+            <a class="button post-button post-reply" href="/post/reply/{{post.id}}">Reply</a>
+            {% else %}
+            <a class="button post-button post-reply" href="/post/reply/{{post.id}}">Reply</a>
             {% endif %}
-        </p>
-        {% if current_user.id == post.author_id %}
-        <a class="button post-button post-edit" href="/post/edit/{{post.id}}">Edit</a>
-        <a class="button post-button post-delete" href="/post/delete/{{post.id}}">Delete</a>
-        <a class="button post-button post-reply" href="/post/reply/{{post.id}}">Reply</a>
-        {% else %}
-        <a class="button post-button post-reply" href="/post/reply/{{post.id}}">Reply</a>
-        {% endif %}
-        <br />
+            <br />
+        </div>
     </div>
 
     {% for reply in replies %}
     {% if reply.post_id == post.id %}
     {% if current_user.id == reply.author_id %}
-    <div class="reply-body">
-        {{reply.reply}}
-        {% if reply.edited %}
-        (Edited)
-        {% endif %}
-        -
-        {{ User.query.filter_by(id=reply.author_id).first().username.capitalize() }}
-        <a class="button reply-button reply-edit" href="/post/reply/edit/{{reply.id}}">Edit</a>
-        <a class="button reply-button reply-delete" href="/post/reply/delete/{{reply.id}}">Delete</a>
+    <div class="cont">
+        <div class="reply-body">
+            {{reply.reply}}
+            {% if reply.edited %}
+            (Edited)
+            {% endif %}
+            -
+            {{ User.query.filter_by(id=reply.author_id).first().username.capitalize() }}
+            <a class="button reply-button reply-edit" href="/post/reply/edit/{{reply.id}}">Edit</a>
+            <a class="button reply-button reply-delete" href="/post/reply/delete/{{reply.id}}">Delete</a>
+        </div>
     </div>
     {% else %}
-    <div class="reply-body">
-        {{reply.reply}}
-        {% if reply.edited %}
-        (Edited)
-        {% endif %}
-        -
-        {{ User.query.filter_by(id=reply.author_id).first().username.capitalize() }}
+    <div class="cont">
+        <div class="reply-body">
+            {{reply.reply}}
+            {% if reply.edited %}
+            (Edited)
+            {% endif %}
+            -
+            {{ User.query.filter_by(id=reply.author_id).first().username.capitalize() }}
+        </div>
     </div>
     {% endif %}
     {% endif %}
