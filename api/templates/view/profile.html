@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
-{% block title %} Home {% endblock %}
+{% block title %} Profile - {{user.username.capitalize()}} {% endblock %}
 {% block header %}
-<h1 class="header">Home</h1>
+<h1 class="header">Profile - {{user.username.capitalize()}}</h1>
 {% endblock %}
-
 
 {% block content %}
 {% if current_user.is_active %}
@@ -13,6 +12,7 @@
 {% endif %}
 <section class="posts">
     {% for post in posts %}
+    {% if post.author_id == user.id %}
     <div class="cont">
         <div class="post">
             <h2 class="post-title">{{post.title}}</h2>
@@ -38,6 +38,7 @@
             <br />
         </div>
     </div>
+    {% endif %}
 
     {% for reply in replies %}
     {% if reply.post_id == post.id %}
