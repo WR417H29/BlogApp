@@ -27,8 +27,8 @@ def create():
             return redirect(url_for('create'))
 
         post = Post(
-            title=form['title'],
-            body=form['body'],
+            title=str(form['title']),
+            body=str(form['body']),
             created_date=datetime.now(),
             author_id=current_user.id,
             edited=False
