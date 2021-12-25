@@ -10,3 +10,6 @@ app.config.from_object(AppConfig)
 db = SQLAlchemy(app)  
 loginManager = LoginManager()  
 loginManager.init_app(app)  
+
+
+from api.routes import auth, view, post, reply
